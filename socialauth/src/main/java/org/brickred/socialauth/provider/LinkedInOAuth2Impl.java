@@ -106,7 +106,7 @@ public class LinkedInOAuth2Impl extends AbstractProvider {
 			throws Exception {
 		config = providerConfig;
 		state = "SocialAuth" + System.currentTimeMillis();
-		String authURL = ENDPOINTS.get(Constants.OAUTH_AUTHORIZATION_URL) + "?"
+		String authURL = "https://www.linkedin.com/uas/oauth2/authorization?"
 				+ STATE + "=" + state;
 		ENDPOINTS.put(Constants.OAUTH_AUTHORIZATION_URL, authURL);
 		// Need to pass scope while fetching RequestToken from LinkedIn for new
@@ -115,14 +115,9 @@ public class LinkedInOAuth2Impl extends AbstractProvider {
 			scope = Permission.CUSTOM;
 		}
 
-		if (config.getAuthenticationUrl() != null) {
-			ENDPOINTS.put(Constants.OAUTH_AUTHORIZATION_URL,
-					config.getAuthenticationUrl());
-		} else {
-			config.setAuthenticationUrl(ENDPOINTS
-					.get(Constants.OAUTH_AUTHORIZATION_URL));
-		}
-
+        	//The OAuthConfig should always set its Authentication URL due to the state changing each time this method is called
+		config.setAuthenticationUrl(authURL);
+		
 		if (config.getAccessTokenUrl() != null) {
 			ENDPOINTS.put(Constants.OAUTH_ACCESS_TOKEN_URL,
 					config.getAccessTokenUrl());
